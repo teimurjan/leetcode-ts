@@ -27,8 +27,8 @@ const removeDuplicatesFromSortedArray2 = (nums: number[]) => {
 export const test = () => {
   const nums = [0, 0, 1, 1, 1, 1, 2, 3, 3];
   const result = removeDuplicatesFromSortedArray2(nums);
-  assert.deepEqual(result, 5);
-  assert.deepEqual(nums, [0, 0, 1, 1, 2, 3, 3]);
+  assert.deepEqual(result, 7);
+  assert.deepEqual(nums, [0, 0, 1, 1, 2, 3, 3, 3, 3]);
 };
 
 export default removeDuplicatesFromSortedArray2;
