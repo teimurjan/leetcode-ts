@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 
-const removeDuplicates = (nums: number[]) => {
+const removeDuplicatesFromSortedArray2 = (nums: number[]) => {
   let left = 0;
   let right = 0;
 
@@ -26,9 +26,9 @@ const removeDuplicates = (nums: number[]) => {
 
 export const test = () => {
   const nums = [0, 0, 1, 1, 1, 1, 2, 3, 3];
-  const result = removeDuplicates(nums);
+  const result = removeDuplicatesFromSortedArray2(nums);
   assert.deepEqual(result, 5);
   assert.deepEqual(nums, [0, 0, 1, 1, 2, 3, 3]);
 };
 
-export default removeDuplicates;
+export default removeDuplicatesFromSortedArray2;
