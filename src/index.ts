@@ -1,13 +1,11 @@
-import inquirer from "inquirer";
+import { ExitPromptError } from "@inquirer/core";
+import { search } from "@inquirer/prompts";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-// @ts-ignore
-import inquirerSearchList from "inquirer-search-list";
+import Fuse from "fuse.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-
-inquirer.registerPrompt("search-list", inquirerSearchList);
 
 const files = fs
   .readdirSync(__dirname)
@@ -21,20 +19,35 @@ const kebabToTitleCase = (str: string): string => {
     .join(" ");
 };
 
-inquirer
-  .prompt([
-    {
-      type: "search-list",
-      message: "Select problem",
-      name: "problem",
-      choices: files.map((file) => ({
-        name: kebabToTitleCase(file.replace(".ts", "")),
-        value: file,
-      })),
-    },
-  ])
-  .then(async (answer) => {
-    const { test } = await import(path.join(__dirname, answer.problem));
+const choices = files.map((file) => ({
+  name: kebabToTitleCase(file.replace(".ts", "")),
+  value: file,
+}));
+
+const fuse = new Fuse(choices, {
+  keys: ["name", "value"],
+});
+
+search({
+  message: "Select problem",
+  source: async (input, { signal }) => {
+    if (process.argv.length > 2) {
+      const problem = process.argv.pop();
+      const results = fuse.search(problem);
+      if (results.length > 0) {
+        return [results[0].item];
+      }
+    }
+
+    if (!input) {
+      return [];
+    }
+
+    return fuse.search(input).map((result) => result.item);
+  },
+})
+  .then(async (problem) => {
+    const { test } = await import(path.join(__dirname, problem));
 
     if (!test) {
       throw new Error("No test function found");
@@ -42,8 +55,15 @@ inquirer
 
     try {
       await test();
-      console.log('✅  All tests passed')
+      console.log("✅  All tests passed");
     } catch (e) {
-      throw e
+      throw e;
+    }
+  })
+  .catch((e) => {
+    if (e instanceof ExitPromptError) {
+      console.log("👋 Bye");
+    } else {
+      throw e;
     }
   });

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
@@ -10,8 +10,5 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "ts-node": {
-    "esm": true
-  },
-  "include": ["src"]
+  "include": ["src", "utils"]
 }

@@ -1,23 +1,13 @@
 import { strict as assert } from "node:assert";
+import BinaryTreeNode from "./utils/binary-tree-node";
 
-class TreeNode {
-  val: number;
-  left: TreeNode | null;
-  right: TreeNode | null;
-  constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
-    this.val = val === undefined ? 0 : val;
-    this.left = left === undefined ? null : left;
-    this.right = right === undefined ? null : right;
-  }
-}
-
-function verticalOrder(root: TreeNode | null): number[][] {
+function verticalOrder(root: BinaryTreeNode | null): number[][] {
   if (root === null) {
     return [];
   }
 
   const columnMap = new Map<number, number[]>();
-  const queue: [TreeNode, number][] = [[root, 0]];
+  const queue: [BinaryTreeNode, number][] = [[root, 0]];
 
   let minColumn = 0;
   let maxColumn = 0;
@@ -52,12 +42,12 @@ function verticalOrder(root: TreeNode | null): number[][] {
 }
 
 export const test = () => {
-  const tree1 = new TreeNode(
+  const tree1 = new BinaryTreeNode(
     3,
-    new TreeNode(9),
-    new TreeNode(20, new TreeNode(15), new TreeNode(7))
+    new BinaryTreeNode(9),
+    new BinaryTreeNode(20, new BinaryTreeNode(15), new BinaryTreeNode(7))
   );
   assert.deepEqual(verticalOrder(tree1), [[9], [3, 15], [20], [7]]);
 };
 
-export default verticalOrder
+export default verticalOrder;
